@@ -3,7 +3,7 @@
 ****************************************************************************************************
  * File:   CloudX.h
  * Version: 1.0
- * Author: Ayinde Olayiwola
+ * Author: Ayinde Olayiwola 
  * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
  * Description: This file contains the program to demonstrate the LED blinking. 
 
