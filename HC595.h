@@ -1,6 +1,6 @@
 char CLKK1,LATT1,DATT1;
 void HC595_Setting(char CLKK, char DATT, char LATT){
-          pinMode(CLKK);  pinMode(LATT);  pinMode(DATT);
+          PortMode(CLKK);  PortMode(LATT);  PortMode(DATT);
           PORT1=0;
           CLKK1=CLKK; LATT1=LATT; DATT1=DATT;
 }

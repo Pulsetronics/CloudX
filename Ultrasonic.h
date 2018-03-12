@@ -11,8 +11,8 @@
  char triggg,echooo;	
 void ultrasonic_Init(unsigned char trigg, unsigned char echoo){
                         	T1CON = 0x10;
-                            pinMode(trigg,OUTPUT);
-							pinMode(echoo,INPUT);
+                            PortMode(trigg,OUTPUT);
+							PortMode(echoo,INPUT);
 							triggg = trigg; echooo = echoo;
 							
 }

@@ -9,6 +9,8 @@
 #define _XTAL_FREQ 20000000
 
 
+
+
 // PIC16F877A Configuration Bit Settings
 
 // 'C' source line config statements
@@ -52,10 +54,6 @@
 #define delayUs __delay_us
 #define DelayMs __delay_ms
 #define DelayUs __delay_us
-#define delayms __delay_ms
-#define delayus __delay_us
-
-
 
 ////////////////////////////////////////////////////////////
 //Program Configuration loops defined libary
@@ -67,8 +65,8 @@
 ////////////////////////////////////////////////////////////
 //ANSI C defined libary
 ///////////////////////////////////////////////////////////
-#define  intTostr itoa
-#define  floatTostr ftoa
+#define  inttostr itoa
+#define  floattostr ftoa
 
 
 ////////////////////////////////////////////////////////////
@@ -83,11 +81,6 @@
 
 #define true 1
 #define false 0
-#define TRUE 1
-#define FALSE 0
-#define BIN 2
-#define HEX 16
-#define DEC 10
 
 #define integer int
 
@@ -134,18 +127,88 @@
 #define pin16Mode  TRISD7
 
 
-////////////////////////////////////////////////////////////
-//PortMode Configuration defined libary
-///////////////////////////////////////////////////////////
-#define port1Mode TRISB
-#define port2Mode TRISD
 
-////////////////////////////////////////////////////////////
-//Port Configuration defined libary
-///////////////////////////////////////////////////////////
-#define port1 PORTB
-#define port2 PORTD
+typedef union{
+    struct{
+        unsigned pin1   :1;
+        unsigned pin2   :1;
+        unsigned pin3   :1;
+        unsigned pin4   :1;
+        unsigned pin5   :1;
+        unsigned pin6   :1;
+        unsigned pin7   :1;
+        unsigned pin8   :1;
+    };
+}Port_t;
 
+extern volatile Port_t port1 @  0x006;
+
+typedef union{
+    struct {
+        unsigned pin1   :1;
+        unsigned pin2   :1;
+        unsigned pin3   :1;
+        unsigned pin4   :1;
+        unsigned pin5   :1;
+        unsigned pin6   :1;
+        unsigned pin7   :1;
+        unsigned pin8   :1;
+
+    };
+} pinModer_t;
+extern volatile pinModer_t port1Mode @  0x086;
+
+typedef union{
+    struct {
+        unsigned pin9   :1;
+        unsigned pin10   :1;
+        unsigned pin11  :1;
+        unsigned pin12  :1;
+        unsigned pin13   :1;
+        unsigned pin14   :1;
+        unsigned pin15   :1;
+	unsigned pin16   :1;
+
+    };
+} pinModeAr_t;
+extern volatile pinModeAr_t port2Mode @ 0x088;
+
+
+
+void text(unsigned char *lcdtext);
+
+
+typedef union{
+    struct {
+       unsigned pinA   :1;
+        unsigned pin10   :1;
+        unsigned pin11  :1;
+        unsigned pin12  :1;
+        unsigned pin13   :1;
+        unsigned pin14   :1;
+        unsigned pin15   :1;
+	unsigned pin16   :1;
+
+    };
+} pinModeBr_t;
+extern volatile pinModeBr_t port2 @ 0x008;
+
+extern volatile unsigned char           PORT1               @ 0x006;
+extern volatile unsigned char           PORT2               @ 0x008;
+
+extern volatile unsigned char           PORT1MODE               @ 0x086;
+extern volatile unsigned char           PORT2MODE               @ 0x088;
+
+
+
+//Examples
+//  port1Mode.port1Pin1=OUTPUT  // pin setup as input or output for Port1
+//  port2Mode.port2Pin1=OUTPUT  // pin setup as input or output for Port2
+//  pin1 = HIGH ;
+//  pin5Mode = OUTPUT;
+//  port1Pins.port1Pin7 = HIGH;
+//  delayMs(1000);
+//  delayUs(100);
 
 PinSelect(char selPins, char segState){
     switch(selPins){
@@ -172,47 +235,26 @@ PinSelect(char selPins, char segState){
 }
 
 
-void PortMode(char segPortSel, char stater){
+void PortMode(char segPortSel){
     switch(segPortSel){
-        case 1:    if(stater==OUTPUT) pin1Mode=OUTPUT;   else pin1Mode=INPUT ; pin1=LOW;break;
-        case 2:    if(stater==OUTPUT) pin2Mode=OUTPUT;   else pin2Mode=INPUT ; pin2=LOW;break;
-        case 3:    if(stater==OUTPUT)  pin3Mode=OUTPUT;  else pin3Mode=INPUT;  pin3=LOW;break;
-        case 4:    if(stater==OUTPUT)  pin4Mode=OUTPUT;  else pin4Mode=INPUT;  pin4=LOW;break;
-        case 5:    if(stater==OUTPUT)  pin5Mode=OUTPUT;  else pin5Mode=INPUT;  pin5=LOW;break;
-        case 6:    if(stater==OUTPUT)  pin6Mode=OUTPUT;  else pin6Mode=INPUT;  pin6=LOW;break;
-        case 7:    if(stater==OUTPUT)   pin7Mode=OUTPUT;  else pin7Mode=INPUT; pin7=LOW;break;
-        case 8:    if(stater==OUTPUT)   pin8Mode=OUTPUT;  else pin8Mode=INPUT; pin8=LOW;break;
-        case 9:    if(stater==OUTPUT)  pin9Mode=OUTPUT;  else pin9Mode=INPUT;   pin9=LOW;break;
-        case 10:   if(stater==OUTPUT)  pin10Mode=OUTPUT;  else pin10Mode=INPUT; pin10=LOW;break;
-        case 11:   if(stater==OUTPUT)  pin11Mode=OUTPUT;  else pin11Mode=INPUT; pin11=LOW;break;
-        case 12:   if(stater==OUTPUT)  pin12Mode=OUTPUT;  else pin12Mode=INPUT; pin12=LOW;break;
-        case 13:   if(stater==OUTPUT)  pin13Mode=OUTPUT;  else pin13Mode=INPUT; pin13=LOW;break;
-        case 14:   if(stater==OUTPUT)  pin14Mode=OUTPUT;  else pin14Mode=INPUT; pin14=LOW;break;
-        case 15:   if(stater==OUTPUT)  pin15Mode=OUTPUT;  else pin15Mode=INPUT; pin15=LOW;break;
-        case 16:   if(stater==OUTPUT)  pin16Mode=OUTPUT;  else pin16Mode=INPUT; pin16=LOW;break;
+        case 1:     pin1Mode=OUTPUT; pin1=LOW;break;
+        case 2:     pin2Mode=OUTPUT; pin2=LOW;break;
+        case 3:     pin3Mode=OUTPUT; pin3=LOW;break;
+        case 4:     pin4Mode=OUTPUT; pin4=LOW;break;
+        case 5:     pin5Mode=OUTPUT; pin5=LOW;break;
+        case 6:     pin6Mode=OUTPUT; pin6=LOW;break;
+        case 7:     pin7Mode=OUTPUT; pin7=LOW;break;
+        case 8:     pin8Mode=OUTPUT; pin8=LOW;break;
+        case 9:     pin9Mode=OUTPUT; pin9=LOW;break;
+        case 10:     pin10Mode=OUTPUT; pin10=LOW;break;
+        case 11:     pin11Mode=OUTPUT; pin11=LOW;break;
+        case 12:     pin12Mode=OUTPUT; pin12=LOW;break;
+        case 13:     pin13Mode=OUTPUT; pin13=LOW;break;
+        case 14:     pin14Mode=OUTPUT; pin14=LOW;break;
+        case 15:     pin15Mode=OUTPUT; pin15=LOW;break;
+        case 16:     pin16Mode=OUTPUT; pin16=LOW;break;
         default: break;
     }
 }
- unsigned char readPin(unsigned char stater){
-	            switch (stater){
-	    case 1:     if (pin1 == HIGH) return HIGH; else return LOW; 
-        case 2:     if (pin2 == HIGH) return HIGH; else return LOW; 
-        case 3:     if (pin3 == HIGH) return HIGH; else return LOW; 
-        case 4:     if (pin4 == HIGH) return HIGH; else return LOW; 
-        case 5:     if (pin5 == HIGH) return HIGH; else return LOW; 
-        case 6:     if (pin6 == HIGH) return HIGH; else return LOW; 
-        case 7:     if (pin7 == HIGH) return HIGH; else return LOW; 
-        case 8:     if (pin8 == HIGH) return HIGH; else return LOW; 
-        case 9:     if (pin9 == HIGH) return HIGH; else return LOW; 
-
-        case 10:     if (pin10 == HIGH) return HIGH; else return LOW; 
-        case 11:     if (pin11 == HIGH) return HIGH; else return LOW; 
-        case 12:     if (pin12 == HIGH) return HIGH; else return LOW; 
-        case 13:     if (pin13 == HIGH) return HIGH; else return LOW; 
-        case 14:     if (pin14 == HIGH) return HIGH; else return LOW; 
-        case 15:     if (pin15 == HIGH) return HIGH; else return LOW; 
-        case 16:     if (pin16 == HIGH) return HIGH; else return LOW; 
-				}
- }
 
 //#include<stdlib.h>

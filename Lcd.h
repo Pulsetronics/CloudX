@@ -1,33 +1,3 @@
-/***************************************************************************************************
-                                   ByteHub Embedded
-****************************************************************************************************
- * File:   Lcd.h
- * Version: 1.0
- * Author: Ayinde Olayiwola
- * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
- * Description: This file contains the program to demonstrate the LED blinking. 
-
-This code has been developed and tested on CloudX microcontroller boards.  
-We strongly believe that the library works on any of development boards for respective controllers. 
-Check this link http://www.makeelectronics.ng for awesome tutorials on CloudX,ARM,Robotics,RTOS,IOT.
-ByteHub Embedded invests substantial time and effort developing open source HW and SW tools,
-to support consider buying the CloudX microcontroller boards.
- 
-The ByteHub Embedded libraries and examples are licensed under the terms of the new-bsd license
-(two-clause bsd license). See also: http://www.opensource.org/licenses/bsd-license.php
-
-BYTEHUB EMEBEDED DISCLAIMS ANY KIND OF HARDWARE FAILURE RESULTING OUT OF USAGE OF LIBRARIES, DIRECTLY OR
-INDIRECTLY. FILES MAY BE SUBJECT TO CHANGE WITHOUT PRIOR NOTICE. THE REVISION HISTORY CONTAINS THE 
-INFORMATION RELATED TO UPDATES.
- 
-
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this copyright notices appear in all copies 
-and that both those copyright notices and this permission notice appear in supporting documentation.
-**************************************************************************************************/
-
-
-
 
 #define lcd_clear            0x01
 #define return_home      0x02
@@ -47,7 +17,7 @@ char ENN, RSS, D44, D55, D66, D77;
 
 void lcdSettings(char RSS1,char ENN1,char D441,char D551,char D661,char D771)
 {
-    pinMode(RSS1,OUTPUT); pinMode(ENN1,OUTPUT); pinMode(D441,OUTPUT); pinMode(D551,OUTPUT); pinMode(D661,OUTPUT); pinMode(D771,OUTPUT);
+    PortMode(RSS1,OUTPUT); PortMode(ENN1,OUTPUT); PortMode(D441,OUTPUT); PortMode(D551,OUTPUT); PortMode(D661,OUTPUT); PortMode(D771,OUTPUT);
     PORT1=0;
    RSS = RSS1; ENN= ENN1;  D44= D441; D55=D551; D66=D661; D77=D771;
     
