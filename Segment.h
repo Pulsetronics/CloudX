@@ -1,30 +1,3 @@
-/***************************************************************************************************
-                                   ByteHub Embedded
-****************************************************************************************************
- * File:   segment.h
- * Version: 1.0
- * Author: Ayinde Olayiwola
- * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
- * Description: This file contains the program to demonstrate the LED blinking. 
-
-This code has been developed and tested on CloudX microcontroller boards.  
-We strongly believe that the library works on any of development boards for respective controllers. 
-Check this link http://www.makeelectronics.ng for awesome tutorials on CloudX,ARM,Robotics,RTOS,IOT.
-ByteHub Embedded invests substantial time and effort developing open source HW and SW tools,
-to support consider buying the CloudX microcontroller boards.
- 
-The ByteHub Embedded libraries and examples are licensed under the terms of the new-bsd license
-(two-clause bsd license). See also: http://www.opensource.org/licenses/bsd-license.php
-
-BYTEHUB EMEBEDED DISCLAIMS ANY KIND OF HARDWARE FAILURE RESULTING OUT OF USAGE OF LIBRARIES, DIRECTLY OR
-INDIRECTLY. FILES MAY BE SUBJECT TO CHANGE WITHOUT PRIOR NOTICE. THE REVISION HISTORY CONTAINS THE 
-INFORMATION RELATED TO UPDATES.
- 
-
-Permission to use, copy, modify, and distribute this software and its documentation for any purpose
-and without fee is hereby granted, provided that this copyright notices appear in all copies 
-and that both those copyright notices and this permission notice appear in supporting documentation.
-**************************************************************************************************/
 
 /*
   Programmer: AYINDE OLAYIWOLA
@@ -40,7 +13,7 @@ Example:
          char segmentScanPins[]= {9,10,11,12};
 
          segmentSetting(CCathode,NumberOfDigit,segmentScanPins,segmentDataPins);
-         segmentWrite("4567",100);  // (text to display, time)
+         segmentWrite("4567",100);
 */
 
 
@@ -62,10 +35,10 @@ void segmentSetting(char segType,unsigned char segNoDigit, unsigned char *segSca
 
                  segLoader=0;
                    while(segData[segLoader]< 8)
-                          pinMode(segData[segLoader++],OUTPUT);
+                          PortMode(segData[segLoader++],OUTPUT);
                  segLoader=0;
                    while(segScan[segLoader]!=0)
-                          pinMode(segScan[segLoader++],OUTPUT);
+                          PortMode(segScan[segLoader++],OUTPUT);
 
 }
 
