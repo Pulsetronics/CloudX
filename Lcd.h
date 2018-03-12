@@ -1,4 +1,6 @@
 
+
+  //Sample code
 #define lcd_clear            0x01
 #define return_home      0x02
 #define move_cursor_right   0x14
