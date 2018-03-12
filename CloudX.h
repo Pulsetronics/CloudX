@@ -3,7 +3,7 @@
 ****************************************************************************************************
  * File:   CloudX.h
  * Version: 1.0
- * Author: Ayinde Olayiwola 
+ * Author: Ayinde Olayiwola
  * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
  * Description: This file contains the program to demonstrate the LED blinking. 
 
@@ -25,6 +25,9 @@ Permission to use, copy, modify, and distribute this software and its documentat
 and without fee is hereby granted, provided that this copyright notices appear in all copies 
 and that both those copyright notices and this permission notice appear in supporting documentation.
 **************************************************************************************************/
+
+
+
 
 // CloudX Configuration Bit Settings
 
@@ -83,7 +86,6 @@ and that both those copyright notices and this permission notice appear in suppo
 #define delayus __delay_us
 
 
-
 ////////////////////////////////////////////////////////////
 //Program Configuration loops defined libary
 ///////////////////////////////////////////////////////////
@@ -96,6 +98,7 @@ and that both those copyright notices and this permission notice appear in suppo
 ///////////////////////////////////////////////////////////
 #define  intTostr itoa
 #define  floatTostr ftoa
+#define  digitalWrite PinSelect
 
 
 ////////////////////////////////////////////////////////////
@@ -116,7 +119,12 @@ and that both those copyright notices and this permission notice appear in suppo
 #define HEX 16
 #define DEC 10
 
+
+////////////////////////////////////////////////////////////
+// C Syntax 
+////////////////////////////////////////////////////////////
 #define integer int
+#define byte char
 
 ////////////////////////////////////////////////////////////
 //Pin Configuration defined libary
@@ -161,18 +169,89 @@ and that both those copyright notices and this permission notice appear in suppo
 #define pin16Mode  TRISD7
 
 
-////////////////////////////////////////////////////////////
-//PortMode Configuration defined libary
-///////////////////////////////////////////////////////////
-#define port1Mode TRISB
-#define port2Mode TRISD
 
-////////////////////////////////////////////////////////////
-//Port Configuration defined libary
-///////////////////////////////////////////////////////////
-#define port1 PORTB
-#define port2 PORTD
+typedef union{
+    struct{
+        unsigned pin1   :1;
+        unsigned pin2   :1;
+        unsigned pin3   :1;
+        unsigned pin4   :1;
+        unsigned pin5   :1;
+        unsigned pin6   :1;
+        unsigned pin7   :1;
+        unsigned pin8   :1;
+    };
+}Port_t;
 
+extern volatile Port_t port1 @  0x006;
+
+typedef union{
+    struct {
+        unsigned pin1   :1;
+        unsigned pin2   :1;
+        unsigned pin3   :1;
+        unsigned pin4   :1;
+        unsigned pin5   :1;
+        unsigned pin6   :1;
+        unsigned pin7   :1;
+        unsigned pin8   :1;
+
+    };
+} pinModer_t;
+extern volatile pinModer_t port1Mode @  0x086;
+
+typedef union{
+    struct {
+        unsigned pin9   :1;
+        unsigned pin10   :1;
+        unsigned pin11  :1;
+        unsigned pin12  :1;
+        unsigned pin13   :1;
+        unsigned pin14   :1;
+        unsigned pin15   :1;
+	unsigned pin16   :1;
+
+    };
+} pinModeAr_t;
+extern volatile pinModeAr_t port2Mode @ 0x088;
+
+
+
+void text(unsigned char *lcdtext);
+
+
+typedef union{
+    struct {
+       unsigned pinA   :1;
+        unsigned pin10   :1;
+        unsigned pin11  :1;
+        unsigned pin12  :1;
+        unsigned pin13   :1;
+        unsigned pin14   :1;
+        unsigned pin15   :1;
+	unsigned pin16   :1;
+
+    };
+} pinModeBr_t;
+extern volatile pinModeBr_t port2 @ 0x008;
+
+extern volatile unsigned char           PORT1               @ 0x006;
+extern volatile unsigned char           PORT2               @ 0x008;
+
+extern volatile unsigned char           PORT1MODE               @ 0x086;
+extern volatile unsigned char           PORT2MODE               @ 0x088;
+
+
+
+
+//Examples
+//  port1Mode.port1Pin1=OUTPUT  // pin setup as input or output for Port1
+//  port2Mode.port2Pin1=OUTPUT  // pin setup as input or output for Port2
+//  pin1 = HIGH ;
+//  pin5Mode = OUTPUT;
+//  port1Pins.port1Pin7 = HIGH;
+//  delayMs(1000);
+//  delayUs(100);
 
 PinSelect(char selPins, char segState){
     switch(selPins){
@@ -199,7 +278,7 @@ PinSelect(char selPins, char segState){
 }
 
 
-void PortMode(char segPortSel, char stater){
+void pinMode(char segPortSel, char stater){
     switch(segPortSel){
         case 1:    if(stater==OUTPUT) pin1Mode=OUTPUT;   else pin1Mode=INPUT ; pin1=LOW;break;
         case 2:    if(stater==OUTPUT) pin2Mode=OUTPUT;   else pin2Mode=INPUT ; pin2=LOW;break;
