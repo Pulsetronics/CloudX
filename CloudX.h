@@ -72,8 +72,13 @@ and that both those copyright notices and this permission notice appear in suppo
 #define ON_ALL 0xFF
 #define OFF_ALL 0x00
 
+///////////////////////////////////////////////////////////
+//Functions 
+///////////////////////////////////////////////////////////
 
-
+#define digitalWrite PinSelect
+#define pinMode portMode
+#define digitalRead readPin
 
 ////////////////////////////////////////////////////////////
 //Delay loop defined library
