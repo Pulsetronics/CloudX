@@ -1,11 +1,11 @@
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
+ * File:   CloudX.h
  * Version: 1.0
  * Author: Ayinde Olayiwola
- * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
+ * Description: This file contains the program to demonstrate the LED blinking. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -27,44 +27,37 @@ and that both those copyright notices and this permission notice appear in suppo
 **************************************************************************************************/
 
 
-#ifndef _Serial_H_
-#define _Serial_H_
-
-#define   OK 0 
+#ifndef _M633_H_
+#define _M633_H_
 
 
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
-}
+// CloudX Configuration Bit Settings
 
-void Serial_write(unsigned char SerTx)
-{
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
-}
+// 'C' source line config statements
 
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
-}
-
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
-}
+////////////////////////////////////////////////////////////
+//Processor operting Frequency defined
+///////////////////////////////////////////////////////////
+#define _XTAL_FREQ 20000000
 
 
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
-}
+// PIC16F877A Configuration Bit Settings
 
-#endif    //#ifndef _Serial_H_
+// 'C' source line config statements
+
+
+// #pragma config statements should precede project file includes.
+// Use project enums instead of #define for ON and OFF.
+
+// CONFIG
+#pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
+#pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
+#pragma config PWRTE = ON       // Power-up Timer Enable bit (PWRT enabled)
+#pragma config BOREN = OFF      // Brown-out Reset Enable bit (BOR disabled)
+#pragma config LVP = OFF        // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3 is digital I/O, HV on MCLR must be used for programming)
+#pragma config CPD = OFF        // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
+#pragma config WRT = OFF        // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
+#pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
+#include <CloudX/library.h>
+
+#endif   //#ifndef _M633_H_

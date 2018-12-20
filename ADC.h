@@ -1,11 +1,11 @@
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
+ * File:   ADC.h
  * Version: 1.0
  * Author: Ayinde Olayiwola
  * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Description: This file contains the program to demonstrate the Analog-Digital Converter. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -26,45 +26,36 @@ and without fee is hereby granted, provided that this copyright notices appear i
 and that both those copyright notices and this permission notice appear in supporting documentation.
 **************************************************************************************************/
 
+#ifndef _LIBRARY_H
+#include <CloudX\library.h>
+#endif
 
-#ifndef _Serial_H_
-#define _Serial_H_
-
-#define   OK 0 
+#ifndef _ADC_H_
+#define _ADC_H_
 
 
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
+
+void Analog_setting(){
+    ADCON0 = 0x81;
+    ADCON1 = 0x02;
 }
 
-void Serial_write(unsigned char SerTx)
-{
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
+unsigned int Analog_read(unsigned char channel){
+    int aadc,bbdc, ccdc;
+	channel = channel - 17;
+    if(channel>7)return 0;
+    ADCON0 = ADCON0 & 0xC5;
+    ADCON0 = ADCON0 | (channel << 3);
+    __delay_ms(2);
+    ADCON0bits.GO_DONE = 1;
+    while(ADCON0bits.GO_DONE);
+    aadc = ADRESH;
+    aadc = aadc<<2;
+    bbdc = ADRESL;
+    bbdc = bbdc >>6;
+    ccdc = aadc|bbdc;
+    return ccdc;
+
 }
 
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
-}
-
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
-}
-
-
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
-}
-
-#endif    //#ifndef _Serial_H_
+#endif   //#ifndef _ADC_H_

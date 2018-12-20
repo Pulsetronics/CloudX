@@ -1,23 +1,39 @@
-/*	Standard utility functions */
+/***************************************************************************************************
+                                   ByteHub Embedded
+****************************************************************************************************
+ * File:   stdlib.h
+ * Version: 1.0
+ * Author: Ayinde Olayiwola
+ * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
+ * Description: This file contains the program to demonstrate the LED blinking. 
 
-#ifndef	_STDDEF
-typedef	int		ptrdiff_t;	/* result type of pointer difference */
-typedef	unsigned	size_t;		/* type yielded by sizeof */
+This code has been developed and tested on CloudX microcontroller boards.  
+We strongly believe that the library works on any of development boards for respective controllers. 
+Check this link http://www.makeelectronics.ng for awesome tutorials on CloudX,ARM,Robotics,RTOS,IOT.
+ByteHub Embedded invests substantial time and effort developing open source HW and SW tools,
+to support consider buying the CloudX microcontroller boards.
+ 
+The ByteHub Embedded libraries and examples are licensed under the terms of the new-bsd license
+(two-clause bsd license). See also: http://www.opensource.org/licenses/bsd-license.php
+
+BYTEHUB EMEBEDED DISCLAIMS ANY KIND OF HARDWARE FAILURE RESULTING OUT OF USAGE OF LIBRARIES, DIRECTLY OR
+INDIRECTLY. FILES MAY BE SUBJECT TO CHANGE WITHOUT PRIOR NOTICE. THE REVISION HISTORY CONTAINS THE 
+INFORMATION RELATED TO UPDATES.
+ 
+
+Permission to use, copy, modify, and distribute this software and its documentation for any purpose
+and without fee is hereby granted, provided that this copyright notices appear in all copies 
+and that both those copyright notices and this permission notice appear in supporting documentation.
+**************************************************************************************************/
+
+/*	Standard utility functions */
+#ifndef _STDLIB_H_
+#define _STDLIB_H_
+
+#include <__size_t.h>
+#include <__null.h>
 typedef unsigned short	wchar_t;	/* wide char type */
 
-#define	offsetof(ty, mem)	((int)&(((ty *)0)->mem))
-
-#define	_STDDEF
-
-#ifndef	NULL
-#define	NULL	(0)
-#endif
-
-extern int	errno;			/* system error number */
-#endif	/* _STDDEF */
-
-#ifndef	_STDLIB_
-#define	_STDLIB_
 #define	RAND_MAX	32767		/* max value returned by rand() */
 #define	EXIT_SUCCESS	0
 #define	EXIT_FAILURE	1
@@ -88,8 +104,13 @@ extern void *		malloc(size_t);
 extern void		free(void *);
 extern void *		realloc(void *, size_t);
 
+#if	defined(__XC8)
+/* abort and exit are defined as a macro included in xc8debug.h */
+#include <xc8debug.h>
+#else
 extern void	abort(void);
 extern void	exit(int);
+#endif
 extern int	atexit(void (*)(void));
 extern char *	getenv(const char *);
 extern char **	environ;
@@ -98,7 +119,6 @@ extern void	qsort(void *, size_t, size_t, int (*)(const void *, const void *));
 extern void *	bsearch(const void *, void *, size_t, size_t, int(*)(const void *, const void *));
 extern int	abs(int);
 extern long	labs(long);
-#endif
 
 extern char *	itoa(char * buf, int val, int base);
 extern char *	utoa(char * buf, unsigned val, int base);
@@ -116,3 +136,12 @@ extern char *	ftoa(float f, int * status);
 #define atoul(a)	((unsigned long)atol(a))
 #define btoa(a,b)	itoa((signed char)(a),b)
 #endif
+
+floatTostr(float ff){
+                int statuss;
+		char *buff;
+                buff = floattostr(ff, &statuss);
+		return buff;
+}
+
+#endif   // _STDLIB_H_

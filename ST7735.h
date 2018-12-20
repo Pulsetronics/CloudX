@@ -3,9 +3,9 @@
 ****************************************************************************************************
  * File:   ST7735.h
  * Version: 1.0
- * Author: Ayinde Olayiwola
- * Website: http://www.makeelectronics.ng or http://www.bytehubembedd.com
- * Description: This file contains the program to demonstrate the LED blinking. 
+ * Author:  Ayinde Olayiwola
+ * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
+ * Description: This file contains the program to demonstrate the ST7735 TFT Display. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -27,9 +27,12 @@ and that both those copyright notices and this permission notice appear in suppo
 **************************************************************************************************/
 
 
+#ifndef _ST7735_H_
+#define _ST7735_H_
 
-
+/*
 char TFT_CSSS, TFT_CLKKK, TFT_DATAAA, TFT_DCCC;
+
 
 void ST7735_INIT(char TFT_CSS,char TFT_DCC,char TFT_CLKK,char TFT_DATAA)
 {
@@ -45,7 +48,7 @@ void ST7735_INIT(char TFT_CSS,char TFT_DCC,char TFT_CLKK,char TFT_DATAA)
 #define  TFT_CLK   TFT_CLKKK
 #define  TFT_DATA  TFT_DATAAA
 //#define TFT_SPI_HARDWARE
-
+*/
 
 bool wrap = TRUE;
 unsigned char colstart = 0, rowstart = 0, _tft_type;
@@ -209,39 +212,39 @@ void spiwrite(unsigned char spidata){
   #ifndef TFT_SPI_HARDWARE
     char ss;
     for(ss = 0x80; ss; ss >>= 1) {
-    if (spidata & ss)  PinSelect(TFT_DATA,HIGH);
-    else               PinSelect(TFT_DATA,LOW);
-    PinSelect(TFT_CLK,HIGH);
-    PinSelect(TFT_CLK,LOW);}
+    if (spidata & ss)  TFT_DATA=HIGH;
+    else               TFT_DATA=LOW;
+    TFT_CLK=HIGH;
+    TFT_CLK=LOW;}
  // #else
  //   SPI_WRITE(spidata);
   #endif
 }
 void write_command(unsigned char cmd_){
-  PinSelect(TFT_CS,LOW);
-  PinSelect(TFT_DC,LOW);
+  TFT_CS=LOW;
+  TFT_DC=LOW;
   spiwrite(cmd_);
-  PinSelect(TFT_CS,HIGH);
+  TFT_CS=HIGH;
 }
 void write_data(unsigned char data_){
-  PinSelect(TFT_CS,LOW);
-  PinSelect(TFT_DC,HIGH);
+  TFT_CS=LOW;
+  TFT_DC=HIGH;
   spiwrite(data_);
-  PinSelect(TFT_CS,HIGH);
+  TFT_CS=HIGH;
 }
 void Bcmd(){
   write_command(ST7735_SWRESET);
-  delay_ms(50);
+  delayms(50);
   write_command(ST7735_SLPOUT);
-  delay_ms(500);
+  delayms(500);
   write_command(ST7735_COLMOD);
   write_data(0x05);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_FRMCTR1);
   write_data(0x00);
   write_data(0x06);
   write_data(0x03);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_MADCTL);
   write_data(0x08);
   write_command(ST7735_DISSET5);
@@ -252,7 +255,7 @@ void Bcmd(){
   write_command(ST7735_PWCTR1);
   write_data(0x02);
   write_data(0x70);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_PWCTR2);
   write_data(0x05);
   write_command(ST7735_PWCTR3);
@@ -261,7 +264,7 @@ void Bcmd(){
   write_command(ST7735_VMCTR1);
   write_data(0x3C);
   write_data(0x38);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_PWCTR6);
   write_data(0x11);
   write_data(0x15);
@@ -275,21 +278,21 @@ void Bcmd(){
   write_data(0x22); write_data(0x1D); write_data(0x18); write_data(0x1E);
   write_data(0x1B); write_data(0x1A); write_data(0x24); write_data(0x2B);
   write_data(0x06); write_data(0x06); write_data(0x02); write_data(0x0F);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_CASET);
   write_data(0x00); write_data(0x02); write_data(0x08); write_data(0x81);
   write_command(ST7735_RASET);
   write_data(0x00); write_data(0x01); write_data(0x08); write_data(0xA0);
   write_command(ST7735_NORON);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_DISPON);
-  delay_ms(500);
+  delayms(500);
 }
 void Rcmd1(){
   write_command(ST7735_SWRESET);
-  delay_ms(150);
+  delayms(150);
   write_command(ST7735_SLPOUT);
-  delay_ms(500);
+  delayms(500);
   write_command(ST7735_FRMCTR1);
   write_data(0x01);
   write_data(0x2C);
@@ -354,9 +357,9 @@ void Rcmd3(){
   write_data(0x2E); write_data(0x2E); write_data(0x37); write_data(0x3F);
   write_data(0x00); write_data(0x00); write_data(0x02); write_data(0x10);
   write_command(ST7735_NORON);
-  delay_ms(10);
+  delayms(10);
   write_command(ST7735_DISPON);
-  delay_ms(100);
+  delayms(100);
 }
 void setAddrWindow(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1){
   write_command(ST7735_CASET);
@@ -388,15 +391,15 @@ void fillRectangle(unsigned char x, unsigned char y, unsigned char w, unsigned c
     h = _height - y;
   setAddrWindow(x, y, x+w-1, y+h-1);
   hi = color >> 8; lo = color;
-  PinSelect(TFT_DC,HIGH);
-  PinSelect(TFT_CS,LOW);
+  TFT_DC=HIGH;
+  TFT_CS=LOW;
   for(y=h; y>0; y--) {
     for(x = w; x > 0; x--) {
       spiwrite(hi);
       spiwrite(lo);
     }
   }
-  PinSelect(TFT_CS,HIGH);
+  TFT_CS=HIGH;
 }
 void fillScreen(unsigned int color) {
   fillRectangle(0, 0, _width, _height, color);
@@ -409,13 +412,13 @@ void drawFastVLine(unsigned char x, unsigned char y, unsigned char h, unsigned i
     h = _height - y;
   hi = color >> 8; lo = color;
   setAddrWindow(x, y, x, y + h - 1);
-  PinSelect(TFT_DC,HIGH);
-  PinSelect(TFT_CS, LOW);
+  TFT_DC=HIGH;
+  TFT_CS=LOW;
   while (h--) {
     spiwrite(hi);
     spiwrite(lo);
   }
-  PinSelect(TFT_CS,HIGH);
+  TFT_CS=HIGH;
 }
 void drawFastHLine(unsigned char x, unsigned char y, unsigned char w, unsigned int color){
   unsigned char hi, lo;
@@ -425,13 +428,13 @@ void drawFastHLine(unsigned char x, unsigned char y, unsigned char w, unsigned i
     w = _width - x;
   hi = color >> 8; lo = color;
   setAddrWindow(x, y, x + w - 1, y);
-  PinSelect(TFT_DC,HIGH);
-  PinSelect(TFT_CS,LOW);
+  TFT_DC=HIGH;
+  TFT_CS=LOW;
   while (w--) {
     spiwrite(hi);
     spiwrite(lo);
   }
-   PinSelect(TFT_CS,HIGH);
+   TFT_CS=HIGH;
 }
 void drawCircle(signed int x0, signed int y0, signed int r, unsigned int color) {
   signed int f, ddF_x, ddF_y, x, y;
@@ -740,15 +743,13 @@ int Color565(int r, int g, int b){           // Convert 24-bit color to 16-bit c
 }
 
 void TFT_GreenTab_Initialize(){
-  PinSelect(TFT_CS,HIGH);
-  PinSelect(TFT_DC,LOW);
-  pinMode(1,OUTPUT);
-  pinMode(2,OUTPUT);
+  TFT_CS=HIGH;
+  TFT_DC=LOW;
+
   #ifndef TFT_SPI_HARDWARE
-    PinSelect(TFT_CLK,LOW);
-    PinSelect(TFT_DATA,LOW);
-    pinMode(3,OUTPUT);
-    pinMode(4,OUTPUT);
+    TFT_CLK=LOW;
+    TFT_DATA=LOW;
+   
  // #else
  //   SETUP_SPI(SPI_MASTER | SPI_H_TO_L | SPI_CLK_DIV_4 | SPI_XMIT_L_TO_H);
   #endif
@@ -760,15 +761,13 @@ void TFT_GreenTab_Initialize(){
   _tft_type = 0;
 }
 void TFT_RedTab_Initialize(){
-  PinSelect(TFT_CS,HIGH);
-  PinSelect(TFT_DC,LOW);
+  TFT_CS=HIGH;
+  TFT_DC=LOW;
   pinMode(TFT_CS,OUTPUT);
   pinMode(TFT_DC,OUTPUT);
  #ifndef TFT_SPI_HARDWARE
-    PinSelect(TFT_CLK,LOW);
-    PinSelect(TFT_DATA,LOW);
-    pinMode(TFT_CLK,OUTPUT);
-    pinMode(TFT_DATA,OUTPUT);
+    TFT_CLK=LOW;
+    TFT_DATA=LOW;
  // #else
  //   SETUP_SPI(SPI_MASTER | SPI_H_TO_L | SPI_CLK_DIV_4 | SPI_XMIT_L_TO_H);
   #endif
@@ -778,35 +777,27 @@ void TFT_RedTab_Initialize(){
   _tft_type = 0;
 }
 void TFT_BlackTab_Initialize(){
-  PinSelect(TFT_CS,HIGH);
-  PinSelect(TFT_DC,LOW);
-  pinMode(TFT_CS,OUTPUT);
-  pinMode(TFT_DC,OUTPUT);
-  #ifndef TFT_SPI_HARDWARE
-    PinSelect(TFT_CLK,LOW);
-    PinSelect(TFT_DATA,LOW);
-    pinMode(TFT_CLK,OUTPUT);
-    pinMode(TFT_DATA,OUTPUT);
-//  #else
- //   SETUP_SPI(SPI_MASTER | SPI_H_TO_L | SPI_CLK_DIV_4 | SPI_XMIT_L_TO_H);
-  #endif
-  Rcmd1();
+  TFT_CS=HIGH;
+  TFT_DC=LOW;
+    TFT_CLK=LOW;
+    TFT_DATA=LOW;
+   
+
+ Rcmd1();
   Rcmd2red();
-  Rcmd3();
+ Rcmd3();
   write_command(ST7735_MADCTL);
   write_data(0xC0);
   _tft_type = 1;
 }
 void TFT_ST7735B_Initialize(){
-  PinSelect(TFT_CS,HIGH);
-  PinSelect(TFT_DC,LOW);
-  pinMode(TFT_CS,OUTPUT);
-  pinMode(TFT_DC,OUTPUT);
+  TFT_CS=HIGH;
+  TFT_DC=LOW;
+  
   #ifndef TFT_SPI_HARDWARE
-    PinSelect(TFT_CLK,LOW);
-    PinSelect(TFT_DATA,LOW);
-    pinMode(TFT_CLK,OUTPUT);
-    pinMode(TFT_DATA,OUTPUT);
+    TFT_CLK=LOW;
+    TFT_DATA=LOW;
+   
  // #else
  //   SETUP_SPI(SPI_MASTER | SPI_H_TO_L | SPI_CLK_DIV_4 | SPI_XMIT_L_TO_H);
   #endif
@@ -814,93 +805,6 @@ void TFT_ST7735B_Initialize(){
   _tft_type = 2;
 }
 
-/* 
-  // To support future CloudX Micrcontroller is larger ROM and ROM space
-  
-#if defined (DRAW_BMP_FROM_MMCSD_CARD)                       // Additional code for drawing BMP image files from MMC/SD card
-#ifndef pixel_buffer
-#define pixel_buffer  10
-#endif
-int1 bmpDraw(char x, char y, char *bmpname){
-  int1 ec = 0, padding = 0;
-  char bmpdata[pixel_buffer*3],
-       planes, depth, r, g, b, col, row;
-  int i, buffer=pixel_buffer*3, format, width, height, color;
-  int32 offset, compression, bmp_size, row_size, padding_factor;
-  if((x >= _width) || (y >= _height))
-    return 1;
-  if(fat16_open_file(bmpname) != 0)
-    return 1;
-  ec |= sdcard_read_byte(address_pointer + 1, &format);
-  format <<= 8;
-  ec |= sdcard_read_byte(address_pointer, &format);
-  if(format != 0x4D42)                                             // BMP file format signature
-    return 1;                                                      // Return error
-  ec |= sdcard_read_byte(address_pointer + 0x0D, &offset);
-  offset <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x0C, &offset);
-  offset <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x0B, &offset);
-  offset <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x0A, &offset);
-  ec |= sdcard_read_byte(address_pointer + 0x13, &width);
-  width <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x12, &width);
-  ec |= sdcard_read_byte(address_pointer + 0x17, &height);
-  height <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x16, &height);
-  ec |= sdcard_read_byte(address_pointer + 0x1A, &planes);
-  ec |= sdcard_read_byte(address_pointer + 0x1C, &depth);
-  ec |= sdcard_read_byte(address_pointer + 0x21, &compression);
-  compression <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x20, &compression);
-  compression <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x1f, &compression);
-  compression <<= 8;
-  ec |= sdcard_read_byte(address_pointer + 0x1e, &compression);
-  if(ec != 0 || compression != 0 || depth != 24 || planes != 1)
-    return 1;
-  bmp_size = file_size - offset;                                // bmp_size: BMP image raw size
-  row_size = bmp_size/height;                                   // row_size: number of bytes per row
-  if((x + width  - 1) >=  _width){                              // _width is the TFT screen width
-    width = _width  - x;
-    padding = 1;                                                //Padding = 1 ==> only upper left part will be displayed
-    padding_factor = width / pixel_buffer;
-    if(width % pixel_buffer)
-      padding_factor++;
-    padding_factor *= buffer;
-  }
-  if((y + height - 1) >= _height){                              // _height is the TFT screen height
-    offset += row_size * (height - _height + y);                // Only upper part will be displayed
-    height = _height - y;
-  }
-  file_pointer     = offset;
-  address_pointer += offset;
-  i = buffer;
-  for(row = height; row > 0; row--){
-  for(col = 0; col < width; col++){
-    if(i >= buffer){
-      i = 0;
-      if(fat16_read_data(buffer, bmpdata) != 0)
-        return 1;
-    }
-    b = bmpdata[i++];
-    g = bmpdata[i++];
-    r = bmpdata[i++];
-    color = Color565(r, g, b);
-    drawPixel(x + col, y + row, color);
-  }
-    if(padding == 1){
-      i = buffer;
-      file_pointer    += row_size - padding_factor;
-      address_pointer += row_size - padding_factor;
-    }
-  }
-  return 0;
-}
-#endif
-
-*/
 
 void testlines(unsigned int color) {
   unsigned char x, y;
@@ -1012,6 +916,4 @@ void testtriangles() {
   }
 }
 
-
-
-                  
+#endif   //#ifndef _ST7735_H_

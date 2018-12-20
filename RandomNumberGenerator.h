@@ -1,11 +1,12 @@
+
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
- * Version: 1.0
- * Author: Ayinde Olayiwola
+ * File:         RandomNumberGenerator.h
+ * Version:      1.1
+ * Author:       Bytehub Embed-Studio
  * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Description: This file contains the program to demonstrate the LM35 Temparature Sensor. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -24,47 +25,25 @@ INFORMATION RELATED TO UPDATES.
 Permission to use, copy, modify, and distribute this software and its documentation for any purpose
 and without fee is hereby granted, provided that this copyright notices appear in all copies 
 and that both those copyright notices and this permission notice appear in supporting documentation.
-**************************************************************************************************/
+******************************************************************************************************/
 
 
-#ifndef _Serial_H_
-#define _Serial_H_
+#ifndef _RandNum_H_
+#define _RandNum_H_
 
-#define   OK 0 
+#include <stdlib.h>
 
+int minimum, maximum, Divisor;
 
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
+void RandNumber_limit(int min, int max){
+    minimum=min;
+    maximum=max;
+}
+int RandNumber_gen(){
+    int generated;
+    Divisor=32767/(maximum);             //32767 => max value returned by rand()
+    generated = rand()/Divisor + minimum;
+    return generated;
 }
 
-void Serial_write(unsigned char SerTx)
-{
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
-}
-
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
-}
-
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
-}
-
-
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
-}
-
-#endif    //#ifndef _Serial_H_
+#endif  //#ifndef _RandNum_H_
