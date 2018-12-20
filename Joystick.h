@@ -1,11 +1,11 @@
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
+ * File:   Joystick.h
  * Version: 1.0
  * Author: Ayinde Olayiwola
  * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Description: This file contains the program to demonstrate the Joystick Library. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -27,44 +27,32 @@ and that both those copyright notices and this permission notice appear in suppo
 **************************************************************************************************/
 
 
-#ifndef _Serial_H_
-#define _Serial_H_
+#ifndef _JoyStick_H_
+#define _JoyStick_H_
 
-#define   OK 0 
+#define JOYSTICK_UP 0
+#define JOYSTICK_DOWN 5
+#define JOYSTICK_LEFT 0
+#define JOYSTICK_RIGHT 5
 
+Joystick_upDown(unsigned char y){
+	               if(analogRead(y) < 200) return JOYSTICK_UP;
+				   else if(Analog_read(y) >1000) return JOYSTICK_DOWN;
+				   else return 0xFF;
 
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
 }
 
-void Serial_write(unsigned char SerTx)
-{
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
+Joystick_leftRight(unsigned char x){
+	               if(analogRead(x) < 200) return JOYSTICK_LEFT;
+				   else if(Analog_read(x) >1000) return JOYSTICK_RIGHT;
+				   else return 0xFF;
 }
 
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
+Joystick_centre(unsigned char cntre){
+	   if(readPin(cntre) == LOW) return LOW;
+	   else return HIGH;
 }
 
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
-}
+#endif   //#define _JoyStick_H_
 
 
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
-}
-
-#endif    //#ifndef _Serial_H_

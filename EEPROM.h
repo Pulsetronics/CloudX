@@ -1,11 +1,11 @@
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
+ * File:   EEPROM.h
  * Version: 1.0
  * Author: Ayinde Olayiwola
  * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Description: This file contains the program to demonstrate the Internal Memory Storage. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -26,45 +26,26 @@ and without fee is hereby granted, provided that this copyright notices appear i
 and that both those copyright notices and this permission notice appear in supporting documentation.
 **************************************************************************************************/
 
+#ifndef _InternalMemory_H_
+#define _InternalMemory_H_
 
-#ifndef _Serial_H_
-#define _Serial_H_
-
-#define   OK 0 
-
-
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
+EEPROM_read(unsigned char RIM){
+    EEADR = RIM;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.RD = 1;
+    return EEDATA ;
 }
 
-void Serial_write(unsigned char SerTx)
-{
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
+EEPROM_write(unsigned char WIMADDR, unsigned char WIMDATA){
+    while(EECON1bits.WR == 1);
+    EEADR = WIMADDR;
+    EEDATA = WIMDATA;
+    EECON1bits.EEPGD = 0;
+    EECON1bits.WREN = 1;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+    EECON1bits.WREN = 0;
 }
 
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
-}
-
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
-}
-
-
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
-}
-
-#endif    //#ifndef _Serial_H_
+#endif   //#ifndef _InternalMemory_H_

@@ -1,11 +1,12 @@
+
 /***************************************************************************************************
                                    ByteHub Embedded
 ****************************************************************************************************
- * File:   Serial.h
+ * File:  DS3231.h
  * Version: 1.0
  * Author: Ayinde Olayiwola
  * Website: http://www.makeelectronics.ng or http://www.bytehubembed.com
- * Description: This file contains the program to demonstrate the serial. 
+ * Description: This file contains the program to demonstrate the DS3231 RTC. 
 
 This code has been developed and tested on CloudX microcontroller boards.  
 We strongly believe that the library works on any of development boards for respective controllers. 
@@ -27,44 +28,49 @@ and that both those copyright notices and this permission notice appear in suppo
 **************************************************************************************************/
 
 
-#ifndef _Serial_H_
-#define _Serial_H_
-
-#define   OK 0 
+#ifndef _DS3231_H_
+#define _DS3231_H_
 
 
-void Serial_begin(const unsigned long baudd){
-    SPBRG = (_XTAL_FREQ - (baudd*16)) / (baudd*16);
-    TXSTA = 0x24;
-    RCSTA = 0x90;
-   
+#include <CloudX\I2C.h>
+#include <CloudX\stdlib.h>
+
+#define frequency      0x10
+#define startOscilator 0x00
+#define second         0
+#define minute         1
+#define hour           2
+#define day            3
+#define date           4
+#define month          5
+#define year           6
+#define SQWE           7
+
+DS3231_init(){
+    I2C_begin(100000);
 }
 
-void Serial_write(unsigned char SerTx)
+unsigned char DS3231_read(unsigned char address)
 {
-    TXSTAbits.TXEN =1;
-    TXREG = SerTx;
-    delayMs(5);
-}
-
-void Serial_writeText(unsigned char *Sertxxt){
-    unsigned char pnttter=0;
-    while(Sertxxt[pnttter] != 0)
-        serialWrite(Sertxxt[pnttter++]);
-}
-
-unsigned char Serial_read(){
-     RCSTAbits.CREN =1;
-     PIR1bits.RCIF=0;
-     RCSTAbits.CREN = 1;
-    return RCREG;
+  unsigned char r_data;
+  I2C_start();
+  I2C_write(0xD0);
+  I2C_write(address);
+  I2C_repeatedStart();
+  I2C_write(0xD1);
+  r_data = I2C_read();
+  I2C_stop();
+  return(r_data);
 }
 
 
-unsigned char Serial_available(){
-    RCSTAbits.CREN =1;
-	if(RCSTAbits.OERR) {RCSTAbits.CREN = 0; RCSTAbits.CREN =1;}
-    return PIR1bits.RCIF;
+void DS3231_write(unsigned char address, unsigned char w_data)
+{
+  I2C_start();
+  I2C_write(0xD0);
+  I2C_write(address);
+  I2C_write(w_data);
+  I2C_stop();
 }
 
-#endif    //#ifndef _Serial_H_
+#endif  //#ifndef _DS3231_H_
